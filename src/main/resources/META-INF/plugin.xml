@@ -1,0 +1,21 @@
+<idea-plugin>
+  <id>com.developerlife.example.template</id>
+  <name>Complex JetBrains UI Components</name>
+  <version>1.0</version>
+  <vendor>developerlife.com</vendor>
+
+  <description><![CDATA[
+    Creates complex JetBrains platform UI components and shows how to use them.
+    ]]></description>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+  <idea-version since-build="2020.1" until-build="2020.*" />
+
+  <!--
+    Declare dependency on IntelliJ module `com.intellij.modules.platform` which provides the following:
+    Messaging, UI Themes, UI Components, Files, Documents, Actions, Components, Services, Extensions, Editors
+    More info: https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+  -->
+  <depends>com.intellij.modules.platform</depends>
+
+</idea-plugin>
