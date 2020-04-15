@@ -25,3 +25,9 @@ Package name updates:
 
 1. `build.gradle.kts` - change "com.developerlife" to the package of your new IDEA project
 2. `src/main/resources/META-INF/plugin.xml` - change "com.developerlife" to the package of your new IDEA project
+
+Change the file names of the .iml files:
+
+1. Rename the two .iml files in `.idea/modules/` folder: `template.main.iml` and `template.test.iml`.
+2. Change "template" to the name of your new IDEA project (and this should match the changes you made in the
+   `./idea/modules.xml` file).

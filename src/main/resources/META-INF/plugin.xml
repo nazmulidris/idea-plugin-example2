@@ -1,5 +1,5 @@
 <idea-plugin>
-  <id>com.developerlife.example.template</id>
+  <id>com.developerlife.example.idea-plugin-example2</id>
   <name>Complex JetBrains UI Components</name>
   <version>1.0</version>
   <vendor>developerlife.com</vendor>
