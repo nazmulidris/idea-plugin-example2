@@ -3,10 +3,10 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-
 - [Tool windows](#tool-windows)
   - [Declarative tool window](#declarative-tool-window)
   - [Programmatic tool window](#programmatic-tool-window)
+  - [Indices and dumb aware](#indices-and-dumb-aware)
 - [Creating a content for any kind of tool window](#creating-a-content-for-any-kind-of-tool-window)
   - [Content closeability](#content-closeability)
 - [Examples](#examples)
@@ -56,9 +56,13 @@ of tool window must be added programmatically by calling `ToolWindowManager.regi
 
 - This method has multiple overloads that can be used depending on the task.
 - When using an overload that takes a component, it becomes the first tab ("content") displayed in the tool window.
-- Displaying the contents of many tool windows requires access to the indices. Because of that, tool windows are
-  normally disabled while building indices, unless true is passed as the value of `canWorkInDumbMode` to the
-  `registerToolWindow()` function.
+
+### Indices and dumb aware
+
+Displaying the contents of many tool windows requires access to the indices. Because of that, tool windows are normally
+disabled while building indices, unless true is passed as the value of `canWorkInDumbMode` to the `registerToolWindow()`
+function (for programmatic tool windows). You can also implement `DumbAware` in your factory class to let IDEA know that
+your tool window can be shown while indices are being built.
 
 ## Creating a content for any kind of tool window
 

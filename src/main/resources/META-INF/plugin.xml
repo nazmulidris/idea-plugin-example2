@@ -18,4 +18,9 @@
   -->
   <depends>com.intellij.modules.platform</depends>
 
+  <extensions defaultExtensionNs="com.intellij">
+    <toolWindow icon="/icons/ic_toolwindow.svg" id="Declarative tool window" anchor="left" secondary="true"
+        factoryClass="ui.DeclarativeToolWindowFactory" />
+  </extensions>
+
 </idea-plugin>
