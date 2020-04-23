@@ -9,9 +9,6 @@
   - [Indices and dumb aware](#indices-and-dumb-aware)
 - [Creating a content for any kind of tool window](#creating-a-content-for-any-kind-of-tool-window)
   - [Content closeability](#content-closeability)
-- [Examples](#examples)
-  - [Declarative example](#declarative-example)
-  - [Programmatic example](#programmatic-example)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -49,13 +46,84 @@ Always visible and the user can interact with it at anytime (eg: Gradle plugin t
   - For versions 2020.1 and later, also implement the `isApplicable(Project)` method if there's no need to display a
     tool window for all projects. Note this condition is only evaluated the first time a project is loaded.
 
+Here's an example.
+
+The factory class.
+
+```kotlin
+class DeclarativeToolWindowFactory : ToolWindowFactory, DumbAware {
+  override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
+    val contentManager = toolWindow.contentManager
+    val content = contentManager.factory.createContent(createDialogPanel(), null, false)
+    contentManager.addContent(content)
+  }
+}
+
+fun createDialogPanel(): DialogPanel = panel {
+  noteRow("""Note with a link. <a href="http://github.com">Open source</a>""") {
+    colorConsole {
+      printLine {
+        span(Colors.Purple, "link url: '$it' clicked")
+      }
+    }
+    BrowserUtil.browse(it)
+  }
+}
+```
+
+The `plugin.xml` snippet.
+
+```xml
+<extensions defaultExtensionNs="com.intellij">
+  <toolWindow
+      icon="/icons/ic_toolwindow.svg"
+      id="Declarative tool window"
+      anchor="left"
+      secondary="true"
+      factoryClass="ui.DeclarativeToolWindowFactory" />
+</extensions>
+```
+
 ### Programmatic tool window
 
 Only visible when a plugin creates it to show the results of an operation (eg: Analyze Dependencies action). This type
-of tool window must be added programmatically by calling `ToolWindowManager.registerToolWindow()`.
+of tool window must be added programmatically by calling
+`ToolWindowManager.getInstance().registerToolWindow(RegisterToolWindowTask)`. The task that is passed as an argument can
+take the values that are passed in `plugin.xml`.
 
-- This method has multiple overloads that can be used depending on the task.
-- When using an overload that takes a component, it becomes the first tab ("content") displayed in the tool window.
+Here's an example.
+
+```kotlin
+class DeclarativeToolWindowFactory : ToolWindowFactory, DumbAware {
+  override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
+    val contentManager = toolWindow.contentManager
+    val content = contentManager.factory.createContent(createDialogPanel(), null, false)
+    contentManager.addContent(content)
+  }
+}
+
+fun createDialogPanel(): DialogPanel = panel {
+  noteRow("""Note with a link. <a href="http://github.com">Open source</a>""") {
+    colorConsole {
+      printLine {
+        span(Colors.Purple, "link url: '$it' clicked")
+      }
+    }
+    BrowserUtil.browse(it)
+  }
+}
+```
+
+The `plugin.xml` snippet, to register the action.
+
+```xml
+<actions>
+  <action id="MyPlugin.OpenToolWindowAction" class="actions.OpenToolWindowAction" text="Open Tool Window"
+      description="Opens tool window programmatically" icon="/icons/ic_extension.svg">
+    <add-to-group group-id="EditorPopupMenu" anchor="first" />
+  </action>
+</actions>
+```
 
 ### Indices and dumb aware
 
@@ -87,38 +155,3 @@ A plugin can control whether the user is allowed to close tabs either 1) globall
 
 If closing tabs is enabled in general, a plugin can disable closing of specific tabs by calling
 `Content.setCloseable(false)`.
-
-## Examples
-
-### Declarative example
-
-The factory class.
-
-```kotlin
-class DiagnosticsWindowFactory : ToolWindowFactory, DumbAware {
-    override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
-        val contentManager = toolWindow.contentManager
-        contentManager.removeAllContents(true)
-        val panel = DiagnosticsView() // This is just a JBPanel.
-        val content = contentManager.factory.createContent(panel, null, false)
-        contentManager.addContent(content)
-    }
-}
-```
-
-The `plugin.xml` snippet.
-
-```xml
-<idea-plugin>
-    <extensions defaultExtensionNs="com.intellij">
-        <toolWindow
-                anchor="right"
-                id="Diagnostics [internal]"
-                factoryClass="com.android.tools.idea.diagnostics.DiagnosticsWindowFactory"/>
-    </extensions>
-</idea-plugin>
-```
-
-### Programmatic example
-
-TODO: add example here

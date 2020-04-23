@@ -23,4 +23,11 @@
         factoryClass="ui.DeclarativeToolWindowFactory" />
   </extensions>
 
+  <actions>
+    <action id="MyPlugin.OpenToolWindowAction" class="actions.OpenToolWindowAction" text="Open Tool Window"
+        description="Opens tool window programmatically" icon="/icons/ic_extension.svg">
+      <add-to-group group-id="EditorPopupMenu" anchor="first" />
+    </action>
+  </actions>
+
 </idea-plugin>
