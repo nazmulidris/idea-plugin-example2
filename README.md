@@ -4,19 +4,20 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [Tool windows](#tool-windows)
-  - [Declarative tool window](#declarative-tool-window)
-  - [Programmatic tool window](#programmatic-tool-window)
+  - [1. Declarative tool window](#1-declarative-tool-window)
+  - [2. Programmatic tool window](#2-programmatic-tool-window)
   - [Indices and dumb aware](#indices-and-dumb-aware)
-- [Creating a content for any kind of tool window](#creating-a-content-for-any-kind-of-tool-window)
+  - [Creating a content for any kind of tool window](#creating-a-content-for-any-kind-of-tool-window)
   - [Content closeability](#content-closeability)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 This project is aimed at exploring more complex UI elements from IntelliJ Platform SDK. Here is a list:
 
-1. Tool windows
-2. Gutters
-3. Code editor component
+1. Tool windows.
+2. Line marker provider.
+3. Inlay decoration.
+4. Code editor component.
 
 ## Tool windows
 
@@ -28,9 +29,9 @@ For both of these types of tool windows, the following applies:
    open both of them at the same time. Note that when you move these tool windows to "Left Top" or "Left Bottom" how
    they actually move to the top or bottom of the side of the IDE.
 
-There are two main types of tool windows: Declarative, and Programmatic.
+There are two main types of tool windows: 1) Declarative, and 2) Programmatic.
 
-### Declarative tool window
+### 1. Declarative tool window
 
 Always visible and the user can interact with it at anytime (eg: Gradle plugin tool window).
 
@@ -84,7 +85,7 @@ The `plugin.xml` snippet.
 </extensions>
 ```
 
-### Programmatic tool window
+### 2. Programmatic tool window
 
 Only visible when a plugin creates it to show the results of an operation (eg: Analyze Dependencies action). This type
 of tool window must be added programmatically by calling
@@ -132,7 +133,7 @@ disabled while building indices, unless true is passed as the value of `canWorkI
 function (for programmatic tool windows). You can also implement `DumbAware` in your factory class to let IDEA know that
 your tool window can be shown while indices are being built.
 
-## Creating a content for any kind of tool window
+### Creating a content for any kind of tool window
 
 Regardless of the type of tool window (declarative or programmatic) here is the sequence of operations that you have to
 perform in order to add a content:
