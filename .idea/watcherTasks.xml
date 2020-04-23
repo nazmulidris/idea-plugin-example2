@@ -3,6 +3,7 @@
   <component name="ProjectTasksOptions">
     <enabled-global>
       <option value="md-doctoc" />
+      <option value="md-prettier" />
     </enabled-global>
   </component>
 </project>
