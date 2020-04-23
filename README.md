@@ -3,6 +3,7 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+
 - [Tool windows](#tool-windows)
   - [1. Declarative tool window](#1-declarative-tool-window)
   - [2. Programmatic tool window](#2-programmatic-tool-window)
@@ -18,6 +19,9 @@ This project is aimed at exploring more complex UI elements from IntelliJ Platfo
 2. Line marker provider.
 3. Inlay decoration.
 4. Code editor component.
+5. List.
+6. Tree.
+7. Table.
 
 ## Tool windows
 
@@ -156,3 +160,4 @@ A plugin can control whether the user is allowed to close tabs either 1) globall
 
 If closing tabs is enabled in general, a plugin can disable closing of specific tabs by calling
 `Content.setCloseable(false)`.
+
