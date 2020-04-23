@@ -13,4 +13,4 @@ This project aims to explore more complex UI elements from IntelliJ Platform SDK
 4. [Code editor component](docs/codeeditorcomponent.md)
 5. [List](docs/list.md)
 6. [Tree](docs/tree.md)
-7. [Table](docs/tree.md)
+7. [Table](docs/table.md)
