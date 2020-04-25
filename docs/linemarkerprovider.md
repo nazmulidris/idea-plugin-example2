@@ -43,7 +43,7 @@ explanation as to why (a comment from the source for
 >
 > So imagine a `LineMarkerProvider` which (incorrectly) written like this:
 >
-> ```
+> ```java
 > class MyBadLineMarkerProvider implements LineMarkerProvider {
 >   public LineMarkerInfo getLineMarkerInfo(PsiElement element) {
 >     if (element instanceof PsiMethod) { // ACTUALLY DONT!
@@ -66,7 +66,7 @@ explanation as to why (a comment from the source for
 >
 > As a result, line marker icon will blink annoyingly. Instead, write this:
 >
-> ```
+> ```java
 > class MyGoodLineMarkerProvider implements LineMarkerProvider {
 >   public LineMarkerInfo getLineMarkerInfo(PsiElement element) {
 >     if (element instanceof PsiIdentifier &&
@@ -98,3 +98,5 @@ Discussions
 
 - [JB forums: LineMarker for PsiElement, no target](https://tinyurl.com/y7ohdv2v)
 - [JB forums: Adding "Actions" to Line Markers](https://tinyurl.com/y8gqlz3y)
+- [JB forums: Is it possible to add line markers (gutter icons) without a file change?](https://tinyurl.com/ydhmzew9)
+- [JB forums: Set a LineMarker on click, similar to bookmark](https://tinyurl.com/yd49fc44)
