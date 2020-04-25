@@ -18,6 +18,9 @@
   -->
   <depends>com.intellij.modules.platform</depends>
 
+  <!-- Markdown plugin. -->
+  <depends>org.intellij.plugins.markdown</depends>
+
   <extensions defaultExtensionNs="com.intellij">
     <toolWindow icon="/icons/ic_toolwindow.svg" id="Declarative tool window" anchor="left" secondary="true"
         factoryClass="ui.DeclarativeToolWindowFactory" />
@@ -29,5 +32,9 @@
       <add-to-group group-id="EditorPopupMenu" anchor="first" />
     </action>
   </actions>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <codeInsight.lineMarkerProvider language="Markdown" implementationClass="ui.MarkdownLineMarkerProvider" />
+  </extensions>
 
 </idea-plugin>
