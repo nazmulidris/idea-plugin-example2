@@ -33,8 +33,7 @@ class MarkdownLineMarkerProvider : LineMarkerProvider {
 
   private fun createToolTipProvider(inlineLinkElement: PsiElement): Function<in PsiElement, String> {
     val tooltipProvider =
-        Function { element1: PsiElement ->
-
+        Function { element: PsiElement ->
           val current = LocalDateTime.now()
           val formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
           val formatted = current.format(formatter)
