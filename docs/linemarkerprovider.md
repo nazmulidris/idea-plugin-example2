@@ -196,7 +196,8 @@ internal class MarkdownLineMarkerProvider : LineMarkerProvider {
 }
 ```
 
-You can add the `ic_linemarkerprovider.svg` icon here (create this file in the `$PROJECT_DIR/src/main/resources/icons/` folder.
+You can add the `ic_linemarkerprovider.svg` icon here (create this file in the `$PROJECT_DIR/src/main/resources/icons/`
+folder.
 
 ```xml
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="13px" width="13px">
@@ -204,6 +205,120 @@ You can add the `ic_linemarkerprovider.svg` icon here (create this file in the `
   <path
       d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z" />
 </svg>
+```
+
+#### 4. Provide a more complex implementation of LineMarkerProvider
+
+The example we have so far, simply shows a gutter icon beside the lines in the editor window, that match our matching
+criteria. Let's say that we want to show some relevant actions that can be performed on the `PsiElement`(s) that matched
+and are associated with the gutter icon. In this case we have to delve a little deeper into the `LineMarkerInfo` class.
+
+If you look at
+[`LineMarkerInfo.java`](https://github.com/jetbrains/intellij-community/blob/master/platform/lang-api/src/com/intellij/codeInsight/daemon/LineMarkerInfo.java#L137),
+you will find a `createGutterRenderer()` method. We can actually override this method and create our own
+`GutterIconRenderer` objects that have an action group inside of them which will hold all our related actions.
+
+The following class
+[`RunLineMarkerProvider.java`](https://github.com/jetbrains/intellij-community/blob/master/platform/execution-impl/src/com/intellij/execution/lineMarker/RunLineMarkerProvider.java#L115)
+actually provides us some clue of how to use all of this. In IDEA, when there are targets that you can run, a gutter
+icon (play button) that allows you to execute the run target. This class actually provides an implementation of that
+functionality. Using it as inspiration, we can create the more complex version of our line marker provider.
+
+We are going to change our initial implementation of `MarkdownLineMarkerProvider` quite drastically. First we have to
+add a class that is our new `LineMarkerInfo` implementation called `RunLineMarkerInfo`. This class simply allows us to
+return an `ActionGroup` that we will now have to provide.
+
+```kotlin
+class RunLineMarkerInfo(element: PsiElement,
+                        icon: Icon,
+                        private val myActionGroup: DefaultActionGroup,
+                        tooltipProvider: Function<in PsiElement, String>?
+) : LineMarkerInfo<PsiElement>(element,
+                               element.textRange,
+                               icon,
+                               tooltipProvider,
+                               null,
+                               GutterIconRenderer.Alignment.CENTER) {
+  override fun createGutterRenderer(): GutterIconRenderer? {
+    return object : LineMarkerGutterIconRenderer<PsiElement>(this) {
+      override fun getClickAction(): AnAction? {
+        return null
+      }
+
+      override fun isNavigateAction(): Boolean {
+        return true
+      }
+
+      override fun getPopupMenuActions(): ActionGroup? {
+        return myActionGroup
+      }
+    }
+  }
+}
+```
+
+Next, is the new version of `MarkdownLineMarkerProvider` class itself.
+
+```kotlin
+class MarkdownLineMarkerProvider : LineMarkerProvider {
+
+  override fun getLineMarkerInfo(element: PsiElement): LineMarkerInfo<*>? {
+    val node = element.node
+    val tokenSet = TokenSet.create(MarkdownElementTypes.INLINE_LINK)
+    if (tokenSet.contains(node.elementType))
+      return RunLineMarkerInfo(element,
+                               IconLoader.getIcon("/icons/ic_linemarkerprovider.svg"),
+                               createActionGroup(element),
+                               createToolTipProvider(element))
+    else return null
+  }
+
+  private fun createToolTipProvider(inlineLinkElement: PsiElement): Function<in PsiElement, String> {
+    val tooltipProvider =
+        Function { element1: PsiElement ->
+          val current = LocalDateTime.now()
+          val formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
+          val formatted = current.format(formatter)
+          buildString {
+            append("Tooltip calculated at ")
+            append(formatted)
+          }
+        }
+    return tooltipProvider
+  }
+
+  fun createActionGroup(inlineLinkElement: PsiElement): DefaultActionGroup {
+    val linkDestinationElement =
+        findChildElement(inlineLinkElement, MarkdownTokenTypeSets.LINK_DESTINATION, null)
+    val linkDestination = linkDestinationElement?.text
+    val group = DefaultActionGroup()
+    group.add(OpenUrlAction(linkDestination))
+    return group
+  }
+
+}
+```
+
+The `createActionGroup(...)` method actually creates an `ActionGroup` and adds a bunch of actions that will be available
+when the user clicks on the gutter icon for this plugin. Note that you can also add actions that are registered in your
+`plugin.xml` using something like this.
+
+```kotlin
+group.add(ActionManager.getInstance().getAction("ID of your plugin action"))
+```
+
+Finally, here's the action to open a URL that is associated with the INLINE_LINK that is highlighted in the gutter.
+
+```kotlin
+class OpenUrlAction(val linkDestination: String?) :
+  AnAction("Open Link", "Open URL destination in browser", IconLoader.getIcon("/icons/ic_extension.svg")) {
+  override fun actionPerformed(e: AnActionEvent) {
+    linkDestination?.apply {
+      BrowserUtil.open(this)
+    }
+  }
+
+}
 ```
 
 ### References
