@@ -32,6 +32,9 @@ class MarkdownLineMarkerProvider : LineMarkerProvider {
   }
 
   private fun createToolTipProvider(inlineLinkElement: PsiElement): Function<in PsiElement, String> {
+    val linkDestinationElement =
+        findChildElement(inlineLinkElement, MarkdownTokenTypeSets.LINK_DESTINATION, null)
+    val linkDestination = linkDestinationElement?.text
     val tooltipProvider =
         Function { element: PsiElement ->
           val current = LocalDateTime.now()
@@ -40,6 +43,7 @@ class MarkdownLineMarkerProvider : LineMarkerProvider {
           buildString {
             append("Tooltip calculated at ")
             append(formatted)
+            append(", for URL: $linkDestination")
           }
         }
     return tooltipProvider
