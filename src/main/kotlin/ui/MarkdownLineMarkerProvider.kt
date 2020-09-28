@@ -20,15 +20,14 @@ import javax.swing.Icon
 
 class MarkdownLineMarkerProvider : LineMarkerProvider {
 
+  private val myTokenSetOfMatchingElementTypes = TokenSet.create(MarkdownElementTypes.INLINE_LINK)
+
   override fun getLineMarkerInfo(element: PsiElement): LineMarkerInfo<*>? {
-    val node = element.node
-    val tokenSet = TokenSet.create(MarkdownElementTypes.INLINE_LINK)
-    if (tokenSet.contains(node.elementType))
-      return RunLineMarkerInfo(element,
-                               IconLoader.getIcon("/icons/ic_linemarkerprovider.svg"),
-                               createActionGroup(element),
-                               createToolTipProvider(element))
-    else return null
+    if (!myTokenSetOfMatchingElementTypes.contains(element.node.elementType)) return null
+    return RunLineMarkerInfo(element,
+                             IconLoader.getIcon("/icons/ic_linemarkerprovider.svg"),
+                             createActionGroup(element),
+                             createToolTipProvider(element))
   }
 
   private fun createToolTipProvider(inlineLinkElement: PsiElement): Function<in PsiElement, String> {

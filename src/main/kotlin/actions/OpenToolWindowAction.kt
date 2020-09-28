@@ -9,18 +9,21 @@ import com.intellij.openapi.wm.ToolWindowManager
 import ui.createDialogPanel
 
 internal class OpenToolWindowAction : AnAction() {
+  val id = "Programmatic tool window"
   override fun actionPerformed(e: AnActionEvent) {
-    val id = "Programmatic tool window"
-    val task = RegisterToolWindowTask(
-        id = id,
-        icon = IconLoader.getIcon("/icons/ic_toolwindow.svg"),
-        component = createDialogPanel()
-    )
     val toolWindowManager = ToolWindowManager.getInstance(e.getRequiredData(CommonDataKeys.PROJECT))
     var toolWindow = toolWindowManager.getToolWindow(id)
+
     if (toolWindow == null) {
+      val task = RegisterToolWindowTask(
+          id = id,
+          icon = IconLoader.getIcon("/icons/ic_toolwindow.svg"),
+          component = createDialogPanel(),
+          canWorkInDumbMode = true
+      )
       toolWindow = toolWindowManager.registerToolWindow(task)
     }
+
     toolWindow.show()
   }
 }
