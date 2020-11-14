@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
   id("org.jetbrains.intellij") version "0.4.16"
   kotlin("jvm") version "1.3.70"
@@ -67,4 +65,13 @@ tasks.getByName<org.jetbrains.intellij.tasks.PatchPluginXmlTask>("patchPluginXml
 dependencies {
   testImplementation("org.assertj:assertj-core:3.11.1")
   testImplementation("junit:junit:4.13")
+}
+
+// Add color-console library.
+repositories {
+  jcenter()
+}
+
+dependencies {
+  implementation("com.developerlife:color-console:1.0")
 }

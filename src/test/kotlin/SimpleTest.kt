@@ -1,4 +1,5 @@
-import ColorConsoleContext.Companion.colorConsole
+import color_console_log.ColorConsoleContext.Companion.colorConsole
+import color_console_log.Colors.Red
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -11,7 +12,7 @@ class SimpleTest : BasePlatformTestCase() {
     colorConsole {
       printDebugHeader()
       printLine {
-        span(Colors.Red, "testA() running")
+        span(Red, "testA() running")
         assertThat("AssertJ").isEqualTo("AssertJ")
       }
     }

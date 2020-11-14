@@ -1,7 +1,7 @@
 package psi
 
-import ColorConsoleContext.Companion.colorConsole
-import Colors
+import color_console_log.ColorConsoleContext.Companion.colorConsole
+import color_console_log.Colors
 import com.intellij.lang.Language
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.progress.ProgressIndicator
@@ -18,6 +18,8 @@ import org.intellij.plugins.markdown.lang.MarkdownElementTypes
 import org.intellij.plugins.markdown.lang.MarkdownTokenTypeSets
 import org.intellij.plugins.markdown.lang.MarkdownTokenTypes
 import org.intellij.plugins.markdown.lang.psi.MarkdownPsiElementFactory
+import printDebugHeader
+import printWhichThread
 
 /**
  * Both parameters are marked Nullable for testing. In unit tests, an object of this object is not created.
