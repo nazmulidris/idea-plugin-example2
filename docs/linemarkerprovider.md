@@ -181,7 +181,7 @@ internal class MarkdownLineMarkerProvider : LineMarkerProvider {
 
     val node = element.node
     val tokenSet = TokenSet.create(MarkdownElementTypes.INLINE_LINK)
-    val icon = IconLoader.getIcon("/icons/ic_linemarkerprovider.svg")
+    val icon = IconLoader.getIcon("/icons/ic_linemarkerprovider.svg", javaClass)
 
     if (tokenSet.contains(node.elementType))
       return LineMarkerInfo(element,
@@ -267,7 +267,7 @@ class MarkdownLineMarkerProvider : LineMarkerProvider {
     val tokenSet = TokenSet.create(MarkdownElementTypes.INLINE_LINK)
     if (tokenSet.contains(node.elementType))
       return RunLineMarkerInfo(element,
-                               IconLoader.getIcon("/icons/ic_linemarkerprovider.svg"),
+                               IconLoader.getIcon("/icons/ic_linemarkerprovider.svg", javaClass),
                                createActionGroup(element),
                                createToolTipProvider(element))
     else return null
@@ -311,7 +311,10 @@ Finally, here's the action to open a URL that is associated with the INLINE_LINK
 
 ```kotlin
 class OpenUrlAction(val linkDestination: String?) :
-  AnAction("Open Link", "Open URL destination in browser", IconLoader.getIcon("/icons/ic_extension.svg")) {
+  AnAction("Open Link",
+           "Open URL destination in browser",
+           IconLoader.getIcon("/icons/ic_extension.svg", OpenUrlAction::class.java )
+  ) {
   override fun actionPerformed(e: AnActionEvent) {
     linkDestination?.apply {
       BrowserUtil.open(this)

@@ -9,6 +9,7 @@ import com.intellij.openapi.util.IconLoader
 import com.intellij.psi.PsiElement
 import com.intellij.psi.tree.TokenSet
 import com.intellij.util.Function
+import com.thoughtworks.qdox.model.JavaClass
 import org.intellij.plugins.markdown.lang.MarkdownElementTypes
 import org.intellij.plugins.markdown.lang.MarkdownTokenTypeSets
 import psi.findChildElement
@@ -25,7 +26,7 @@ class MarkdownLineMarkerProvider : LineMarkerProvider {
   override fun getLineMarkerInfo(element: PsiElement): LineMarkerInfo<*>? {
     if (!myTokenSetOfMatchingElementTypes.contains(element.node.elementType)) return null
     return RunLineMarkerInfo(element,
-                             IconLoader.getIcon("/icons/ic_linemarkerprovider.svg"),
+                             IconLoader.getIcon("/icons/ic_linemarkerprovider.svg", javaClass),
                              createActionGroup(element),
                              createToolTipProvider(element))
   }
@@ -88,7 +89,8 @@ class RunLineMarkerInfo(element: PsiElement,
 }
 
 class OpenUrlAction(val linkDestination: String?) :
-  AnAction("Open Link", "Open URL destination in browser", IconLoader.getIcon("/icons/ic_extension.svg")) {
+  AnAction("Open Link", "Open URL destination in browser",
+           IconLoader.getIcon("/icons/ic_extension.svg", OpenUrlAction::class.java)) {
   override fun actionPerformed(e: AnActionEvent) {
     linkDestination?.apply {
       BrowserUtil.open(this)

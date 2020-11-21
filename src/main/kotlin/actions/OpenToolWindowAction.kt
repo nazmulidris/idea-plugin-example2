@@ -17,7 +17,7 @@ internal class OpenToolWindowAction : AnAction() {
     if (toolWindow == null) {
       val task = RegisterToolWindowTask(
           id = id,
-          icon = IconLoader.getIcon("/icons/ic_toolwindow.svg"),
+          icon = IconLoader.getIcon("/icons/ic_toolwindow.svg", javaClass),
           component = createDialogPanel(),
           canWorkInDumbMode = true
       )
