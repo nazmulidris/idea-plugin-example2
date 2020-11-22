@@ -3,7 +3,6 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-
 - [Tool windows](#tool-windows)
   - [1. Declarative tool window](#1-declarative-tool-window)
   - [2. Programmatic tool window](#2-programmatic-tool-window)
@@ -83,28 +82,69 @@ The `plugin.xml` snippet.
 
 Only visible when a plugin creates it to show the results of an operation (eg: Analyze Dependencies action). This type
 of tool window must be added programmatically by calling
-`ToolWindowManager.getInstance().registerToolWindow(RegisterToolWindowTask)`. The task that is passed as an argument can
-take the values that are passed in `plugin.xml`.
+`ToolWindowManager.getInstance().registerToolWindow(RegisterToolWindowTask)`.
 
-Here's an example.
+A couple of things to remember.
+
+1. You have to register the tool window (w/ the tool window manager) before using it. This is a one time operation.
+   There's no need to register the tool window if it's already been registered. Registering simply shows the tool window
+   in the IDEA UI. Unregistering removes it from the UI.
+2. You can tell the tool window to auto hide itself when there are no contents inside of it.
+3. You can create as many "contents" as you want and add it to the tool window. Each content is basically a tab. You can
+   also specify that the content is closable.
+4. You can also attach a disposer to a content so that you can take some action when the content or tab is closed. For
+   eg you can just unregister the tool window when there are no contents left in the tool window.
+
+Here's an example of all of the things listed above.
 
 ```kotlin
-class DeclarativeToolWindowFactory : ToolWindowFactory, DumbAware {
-  override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
-    val contentManager = toolWindow.contentManager
-    val content = contentManager.factory.createContent(createDialogPanel(), null, false)
-    contentManager.addContent(content)
-  }
-}
+internal class AnotherToolWindow : AnAction() {
+  override fun actionPerformed(e: AnActionEvent) {
+    val project: Project = e.getRequiredData(CommonDataKeys.PROJECT)
+    val toolWindowManager = ToolWindowManager.getInstance(project)
+    var toolWindow = toolWindowManager.getToolWindow(ID)
 
-fun createDialogPanel(): DialogPanel = panel {
-  noteRow("""Note with a link. <a href="http://github.com">Open source</a>""") {
-    colorConsole {
-      printLine {
-        span(Colors.Purple, "link url: '$it' clicked")
+    // One time registration of the tool window (does not add any content).
+    if (toolWindow == null) {
+      toolWindow = toolWindowManager.registerToolWindow(
+          RegisterToolWindowTask(
+              id = ID,
+              icon = IconLoader.getIcon("/icons/ic_extension.svg", javaClass),
+              component = null,
+              canCloseContent = true,
+          ))
+      toolWindow.setToHideOnEmptyContent(true)
+    }
+
+    val contentManager = toolWindow.contentManager
+    val contentFactory: ContentFactory = ContentFactory.SERVICE.getInstance()
+    val contentTab = contentFactory.createContent(
+        createComponent(project),
+        "${LocalDate.now()}",
+        false)
+    contentTab.setDisposer {
+      colorConsole {
+        printLine {
+          span(Colors.Purple, "contentTab is disposed, contentCount: ${contentManager.contentCount}")
+        }
+      }
+      if (contentManager.contents.isEmpty()) {
+        toolWindowManager.unregisterToolWindow(ID)
       }
     }
-    BrowserUtil.browse(it)
+    contentManager.addContent(contentTab)
+
+    toolWindow.show()
+  }
+
+  private fun createComponent(project: Project): JComponent {
+    val panel = JPanel(BorderLayout())
+    panel.add(BorderLayout.CENTER, JLabel("TODO add component"))
+    return panel
+  }
+
+  companion object {
+    const val ID = "AnotherToolWindow"
   }
 }
 ```
@@ -113,7 +153,7 @@ The `plugin.xml` snippet, to register the action.
 
 ```xml
 <actions>
-  <action id="MyPlugin.OpenToolWindowAction" class="actions.OpenToolWindowAction" text="Open Tool Window"
+  <action id="MyPlugin.AnotherToolWindow" class="actions.AnotherToolWindow" text="Open Tool Window"
       description="Opens tool window programmatically" icon="/icons/ic_extension.svg">
     <add-to-group group-id="EditorPopupMenu" anchor="first" />
   </action>

@@ -8,9 +8,6 @@
     Creates complex JetBrains platform UI components and shows how to use them.
     ]]></description>
 
-  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-  <idea-version since-build="2020.1" until-build="2020.*" />
-
   <!--
     Declare dependency on IntelliJ module `com.intellij.modules.platform` which provides the following:
     Messaging, UI Themes, UI Components, Files, Documents, Actions, Components, Services, Extensions, Editors
@@ -29,6 +26,13 @@
   <actions>
     <action id="MyPlugin.OpenToolWindowAction" class="actions.OpenToolWindowAction" text="Open Tool Window"
         description="Opens tool window programmatically" icon="/icons/ic_extension.svg">
+      <add-to-group group-id="EditorPopupMenu" anchor="first" />
+    </action>
+  </actions>
+
+  <actions>
+    <action id="MyPlugin.AnotherToolWindow" class="actions.AnotherToolWindow" text="Open Another Tool Window"
+        description="Opens another tool window programmatically" icon="/icons/ic_extension.svg">
       <add-to-group group-id="EditorPopupMenu" anchor="first" />
     </action>
   </actions>

@@ -1,6 +1,6 @@
 plugins {
   id("org.jetbrains.intellij") version "0.6.4"
-  kotlin("jvm") version "1.4.10"
+  kotlin("jvm") version "1.4.20"
 }
 
 group = "com.developerlife.example"
@@ -41,7 +41,34 @@ intellij {
   //    there now). The webpage will also tell you which version of IDEA this is compatible w/.
   // 2. Find the IDEA snapshot that is compatible w/ the Markdown plugin above (which probably won't be the latest EAP
   //    snapshot). Replace the intellij.version (above) w/ this supported snapshot.
-  setPlugins("java", "org.intellij.plugins.markdown:203.5981.37")
+  setPlugins("java", "markdown")
+}
+
+tasks {
+  runPluginVerifier {
+    ideVersions(listOf<String>("2020.1.4", "2020.2.3", "2020.3"))
+  }
+}
+
+/*
+This is the equivalent of adding things to plugin.xml directly.
+For example, you can handle build ranges here instead of adding this snippet in plugin.xml
+- `<idea-version since-build="2020.1" until-build="2020.*" />`
+- More info on build ranges: http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html
+*/
+
+tasks {
+  patchPluginXml {
+    version(project.version)
+    sinceBuild("202")
+    untilBuild("203.*")
+  }
+}
+
+tasks {
+  buildSearchableOptions {
+    enabled = false
+  }
 }
 
 tasks {
@@ -54,20 +81,6 @@ tasks {
     kotlinOptions.jvmTarget = "11"
     kotlinOptions.languageVersion = "1.4"
     kotlinOptions.apiVersion = "1.4"
-  }
-}
-
-tasks {
-  runPluginVerifier {
-    ideVersions(listOf<String>("2020.1.4", "2020.2.3", "2020.3"))
-  }
-}
-
-tasks {
-  patchPluginXml {
-    setChangeNotes("""
-      Add change notes here.<br>
-      <em>most HTML tags may be used</em>""")
   }
 }
 

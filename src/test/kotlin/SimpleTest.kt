@@ -1,6 +1,7 @@
 import color_console_log.ColorConsoleContext.Companion.colorConsole
 import color_console_log.Colors.Red
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
+import com.intellij.ui.popup.ActionPopupStep
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
