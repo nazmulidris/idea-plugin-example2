@@ -12,9 +12,6 @@
       <entry name="!?*.kt" />
       <entry name="!?*.clj" />
     </wildcardResourcePatterns>
-    <bytecodeTargetLevel target="11">
-      <module name="com.developerlife.example.idea-plugin-example2.main" target="11" />
-      <module name="com.developerlife.example.idea-plugin-example2.test" target="11" />
-    </bytecodeTargetLevel>
+    <bytecodeTargetLevel target="11" />
   </component>
 </project>

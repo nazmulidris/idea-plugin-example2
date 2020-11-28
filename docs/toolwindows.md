@@ -134,7 +134,7 @@ internal class AnotherToolWindow : AnAction() {
     }
     contentManager.addContent(contentTab)
 
-    toolWindow.show()
+    toolWindow.show { contentManager.setSelectedContent(contentTab, true) }
   }
 
   private fun createComponent(project: Project): JComponent {
