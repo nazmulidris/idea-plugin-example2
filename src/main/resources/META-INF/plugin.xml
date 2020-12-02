@@ -32,9 +32,33 @@
   </actions>
 
   <actions>
-    <action id="MyPlugin.ComplexToolWindowAction" class="actions.OpenProgrammaticToolWindowBlank"
+    <action id="MyPlugin.ComplexToolWindowActionBlank" class="actions.OpenProgrammaticToolWindowBlank"
         text="Open Complex Tool Window Blank"
         description="Opens complex tool window programmatically w/ blank component" icon="/icons/ic_extension.svg">
+      <add-to-group group-id="EditorPopupMenu" anchor="first" />
+    </action>
+  </actions>
+
+  <actions>
+    <action id="MyPlugin.ComplexToolWindowActionJBList" class="actions.OpenProgrammaticToolWindowJBList"
+        text="Open Complex Tool Window JBList"
+        description="Opens complex tool window programmatically w/ JBList component" icon="/icons/ic_extension.svg">
+      <add-to-group group-id="EditorPopupMenu" anchor="first" />
+    </action>
+  </actions>
+
+  <actions>
+    <action id="MyPlugin.ComplexToolWindowActionJBSplitter" class="actions.OpenProgrammaticToolWindowJBSplitter"
+        text="Open Complex Tool Window JBSplitter"
+        description="Opens complex tool window programmatically w/ JBSplitter component" icon="/icons/ic_extension.svg">
+      <add-to-group group-id="EditorPopupMenu" anchor="first" />
+    </action>
+  </actions>
+
+  <actions>
+    <action id="MyPlugin.ComplexToolWindowActionConsoleView" class="actions.OpenProgrammaticToolWindowConsoleView"
+        text="Open Complex Tool Window ConsoleView"
+        description="Opens complex tool window programmatically w/ ConsoleView component" icon="/icons/ic_extension.svg">
       <add-to-group group-id="EditorPopupMenu" anchor="first" />
     </action>
   </actions>
