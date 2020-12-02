@@ -8,7 +8,7 @@ import com.intellij.openapi.wm.RegisterToolWindowTask
 import com.intellij.openapi.wm.ToolWindowManager
 import ui.createDialogPanel
 
-internal class OpenToolWindowAction : AnAction() {
+internal class OpenSimpleProgrammaticToolWindowAction : AnAction() {
   val id = "Programmatic tool window"
   override fun actionPerformed(e: AnActionEvent) {
     val toolWindowManager = ToolWindowManager.getInstance(e.getRequiredData(CommonDataKeys.PROJECT))

@@ -24,15 +24,17 @@
   </extensions>
 
   <actions>
-    <action id="MyPlugin.OpenToolWindowAction" class="actions.OpenToolWindowAction" text="Open Tool Window"
-        description="Opens tool window programmatically" icon="/icons/ic_extension.svg">
+    <action id="MyPlugin.OpenSimpleToolWindowAction" class="actions.OpenSimpleProgrammaticToolWindowAction"
+        text="Open Simple Tool Window" description="Opens simple tool window programmatically"
+        icon="/icons/ic_extension.svg">
       <add-to-group group-id="EditorPopupMenu" anchor="first" />
     </action>
   </actions>
 
   <actions>
-    <action id="MyPlugin.AnotherToolWindow" class="actions.AnotherToolWindow" text="Open Another Tool Window"
-        description="Opens another tool window programmatically" icon="/icons/ic_extension.svg">
+    <action id="MyPlugin.ComplexToolWindowAction" class="actions.OpenProgrammaticToolWindowBlank"
+        text="Open Complex Tool Window Blank"
+        description="Opens complex tool window programmatically w/ blank component" icon="/icons/ic_extension.svg">
       <add-to-group group-id="EditorPopupMenu" anchor="first" />
     </action>
   </actions>
