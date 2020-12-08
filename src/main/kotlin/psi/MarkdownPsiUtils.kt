@@ -1,5 +1,7 @@
 package psi
 
+import Utils
+import Utils.printDebugHeader
 import color_console_log.ColorConsoleContext.Companion.colorConsole
 import color_console_log.Colors
 import com.intellij.lang.Language
@@ -18,8 +20,6 @@ import org.intellij.plugins.markdown.lang.MarkdownElementTypes
 import org.intellij.plugins.markdown.lang.MarkdownTokenTypeSets
 import org.intellij.plugins.markdown.lang.MarkdownTokenTypes
 import org.intellij.plugins.markdown.lang.psi.MarkdownPsiElementFactory
-import printDebugHeader
-import printWhichThread
 
 /**
  * Both parameters are marked Nullable for testing. In unit tests, an object of this object is not created.
@@ -27,13 +27,13 @@ import printWhichThread
 class CheckCancelled(private val indicator: ProgressIndicator?, private val project: Project?) {
   operator fun invoke() {
     colorConsole {
-      printDebugHeader()
+      Utils.printDebugHeader()
     }
 
     if (indicator == null || project == null) return
 
     colorConsole {
-      printWhichThread()
+      Utils.printWhichThread()
       printLine { span(Colors.Yellow, "Checking for cancellation") }
     }
 
@@ -100,7 +100,7 @@ fun findChildElement(element: PsiElement?, tokenSet: TokenSet, checkCancelled: C
   return processor.foundElement
 }
 
-fun findChildElement(element: PsiElement?, token: IElementType?, checkCancelled: CheckCancelled?): PsiElement? {
+fun findChildElement(element: PsiElement?, token: IElementType, checkCancelled: CheckCancelled?): PsiElement? {
   return findChildElement(element, TokenSet.create(token), checkCancelled)
 }
 

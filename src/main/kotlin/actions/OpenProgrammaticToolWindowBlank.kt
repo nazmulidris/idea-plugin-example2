@@ -1,10 +1,9 @@
 package actions
 
+import Utils
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
-import notify
 import java.awt.BorderLayout
-import javax.swing.JComponent
 import javax.swing.JLabel
 import javax.swing.JPanel
 
@@ -16,6 +15,6 @@ internal class OpenProgrammaticToolWindowBlank : AnAction() {
   private val myAction: AnAction = myToolWindowActionBuilder.buildAction()
   override fun actionPerformed(e: AnActionEvent) {
     myAction.actionPerformed(e)
-    notify("Showing tool window $ID", "With blank content")
+    Utils.notify("Showing tool window $ID", "With blank content")
   }
 }
