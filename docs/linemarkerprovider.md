@@ -14,35 +14,39 @@
 
 ## Line marker provider
 
-Line marker providers allow your plugin to display an icon in the gutter of an editor window. You can also provide
-actions that can be run when the user interacts with the gutter icon, along with a tooltip that can be generated when
-the user hovers over the gutter icon.
+Line marker providers allow your plugin to display an icon in the gutter of an editor window. You
+can also provide actions that can be run when the user interacts with the gutter icon, along with a
+tooltip that can be generated when the user hovers over the gutter icon.
 
 In order to use line marker providers, you have to do two things:
 
-1. Create a class that implements `LineMarkerProvider` that generates the `LineMarkerInfo` for the correct `PsiElement`
-   that you want IDEA to highlight in the IDE.
+1. Create a class that implements `LineMarkerProvider` that generates the `LineMarkerInfo` for the
+   correct `PsiElement` that you want IDEA to highlight in the IDE.
 2. Register this provider in `plugin.xml` and associate it to be run for a specific language.
 
-When your plugin is loaded, IDEA will then run your line marker provider when a file of that language type is loaded in
-the editor. This happens in two passes for performance reasons.
+When your plugin is loaded, IDEA will then run your line marker provider when a file of that
+language type is loaded in the editor. This happens in two passes for performance reasons.
 
-1. IDEA will first call your provider implementation with the `PsiElements` that are currently visible.
-2. IDEA will then call your provider implementation with the `PsiElements` that are currently hidden.
+1. IDEA will first call your provider implementation with the `PsiElements` that are currently
+   visible.
+2. IDEA will then call your provider implementation with the `PsiElements` that are currently
+   hidden.
 
-It is very important that you only return a `LineMarkerInfo` for the more specific `PsiElement` that you wish IDEA to
-highlight, as if you scope it too broadly, there will be scenarios where your gutter icon will blink! Here's a detailed
-explanation as to why (a comment from the source for
+It is very important that you only return a `LineMarkerInfo` for the more specific `PsiElement` that
+you wish IDEA to highlight, as if you scope it too broadly, there will be scenarios where your
+gutter icon will blink! Here's a detailed explanation as to why (a comment from the source for
 [`LineMarkerProvider.java: source file`](https://github.com/JetBrains/intellij-community/blob/master/platform/lang-api/src/com/intellij/codeInsight/daemon/LineMarkerProvider.java)).
 
-> Please create line marker info for leaf elements only - i.e. the smallest possible elements. For example, instead of
-> returning method marker for `PsiMethod`, create the marker for the `PsiIdentifier` which is a name of this method.
+> Please create line marker info for leaf elements only - i.e. the smallest possible elements. For
+> example, instead of returning method marker for `PsiMethod`, create the marker for the
+> `PsiIdentifier` which is a name of this method.
 >
-> Highlighting (specifically, `LineMarkersPass`) queries all `LineMarkerProvider`s in two passes (for performance
-> reasons):
+> Highlighting (specifically, `LineMarkersPass`) queries all `LineMarkerProvider`s in two passes
+> (for performance reasons):
 >
 > 1. first pass for all elements in visible area
-> 2. second pass for all the rest elements If provider returned nothing for both areas, its line markers are cleared.
+> 2. second pass for all the rest elements If provider returned nothing for both areas, its line
+>    markers are cleared.
 >
 > So imagine a `LineMarkerProvider` which (incorrectly) written like this:
 >
@@ -60,12 +64,12 @@ explanation as to why (a comment from the source for
 > }
 > ```
 >
-> Note that it create `LineMarkerInfo` for the whole method body. Following will happen when this method is half-visible
-> (e.g. its name is visible but a part of its body isn't):
+> Note that it create `LineMarkerInfo` for the whole method body. Following will happen when this
+> method is half-visible (e.g. its name is visible but a part of its body isn't):
 >
 > 1. the first pass would remove line marker info because the whole `PsiMethod` isn't visible
-> 2. the second pass would try to add line marker info back because `LineMarkerProvider` was called for the `PsiMethod`
->    at last
+> 2. the second pass would try to add line marker info back because `LineMarkerProvider` was called
+>    for the `PsiMethod` at last
 >
 > As a result, line marker icon will blink annoyingly. Instead, write this:
 >
@@ -87,13 +91,14 @@ explanation as to why (a comment from the source for
 
 ### Example of a provider for Markdown language
 
-Let's say that for Markdown files that are open in the IDE, we want to highlight any lines that have links in them. We
-want an icon to show up in the gutter area that the user can see and click on to take some actions. For example, they
-can open the link.
+Let's say that for Markdown files that are open in the IDE, we want to highlight any lines that have
+links in them. We want an icon to show up in the gutter area that the user can see and click on to
+take some actions. For example, they can open the link.
 
 #### 1. Declare dependencies
 
-Also, because we are relying on the Markdown plugin, in our plugin, we have to add the following dependencies.
+Also, because we are relying on the Markdown plugin, in our plugin, we have to add the following
+dependencies.
 
 To `plugin.xml`, we must add.
 
@@ -141,9 +146,9 @@ The first thing we need to do is register our line marker provider in `plugin.xm
 
 #### 3. Provide an implementation of LineMarkerProvider
 
-Then we have to provide an implementation of `LineMarkerProvider` that returns a `LineMarkerInfo` for the most fine
-grained `PsiElement` that it successfully matches against. In other words, we can either match against the
-`LINK_DESTINATION` or the `LINK_TEXT` elements.
+Then we have to provide an implementation of `LineMarkerProvider` that returns a `LineMarkerInfo`
+for the most fine grained `PsiElement` that it successfully matches against. In other words, we can
+either match against the `LINK_DESTINATION` or the `LINK_TEXT` elements.
 
 Here's an example of what a Markdown link looks like (from a PSI perspective) for the string
 `[`LineMarkerProvider.java`](https://github.com/JetBrains/intellij-community/blob/master/platform/lang-api/src/com/intellij/codeInsight/daemon/LineMarkerProvider.java)`.
@@ -163,7 +168,8 @@ ASTWrapperPsiElement(Markdown:Markdown:INLINE_LINK)(1644,1810)
         PsiElement(Markdown:Markdown:))(')')(1809,1810)
 ```
 
-Here's what the implementation of the line marker provider that matches `INLINE_LINK` might look like.
+Here's what the implementation of the line marker provider that matches `INLINE_LINK` might look
+like.
 
 ```kotlin
 package ui
@@ -196,8 +202,8 @@ internal class MarkdownLineMarkerProvider : LineMarkerProvider {
 }
 ```
 
-You can add the `ic_linemarkerprovider.svg` icon here (create this file in the `$PROJECT_DIR/src/main/resources/icons/`
-folder.
+You can add the `ic_linemarkerprovider.svg` icon here (create this file in the
+`$PROJECT_DIR/src/main/resources/icons/` folder.
 
 ```xml
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="13px" width="13px">
@@ -209,24 +215,28 @@ folder.
 
 #### 4. Provide a more complex implementation of LineMarkerProvider
 
-The example we have so far, simply shows a gutter icon beside the lines in the editor window, that match our matching
-criteria. Let's say that we want to show some relevant actions that can be performed on the `PsiElement`(s) that matched
-and are associated with the gutter icon. In this case we have to delve a little deeper into the `LineMarkerInfo` class.
+The example we have so far, simply shows a gutter icon beside the lines in the editor window, that
+match our matching criteria. Let's say that we want to show some relevant actions that can be
+performed on the `PsiElement`(s) that matched and are associated with the gutter icon. In this case
+we have to delve a little deeper into the `LineMarkerInfo` class.
 
 If you look at
 [`LineMarkerInfo.java`](https://github.com/jetbrains/intellij-community/blob/master/platform/lang-api/src/com/intellij/codeInsight/daemon/LineMarkerInfo.java#L137),
-you will find a `createGutterRenderer()` method. We can actually override this method and create our own
-`GutterIconRenderer` objects that have an action group inside of them which will hold all our related actions.
+you will find a `createGutterRenderer()` method. We can actually override this method and create our
+own `GutterIconRenderer` objects that have an action group inside of them which will hold all our
+related actions.
 
 The following class
 [`RunLineMarkerProvider.java`](https://github.com/jetbrains/intellij-community/blob/master/platform/execution-impl/src/com/intellij/execution/lineMarker/RunLineMarkerProvider.java#L115)
-actually provides us some clue of how to use all of this. In IDEA, when there are targets that you can run, a gutter
-icon (play button) that allows you to execute the run target. This class actually provides an implementation of that
-functionality. Using it as inspiration, we can create the more complex version of our line marker provider.
+actually provides us some clue of how to use all of this. In IDEA, when there are targets that you
+can run, a gutter icon (play button) that allows you to execute the run target. This class actually
+provides an implementation of that functionality. Using it as inspiration, we can create the more
+complex version of our line marker provider.
 
-We are going to change our initial implementation of `MarkdownLineMarkerProvider` quite drastically. First we have to
-add a class that is our new `LineMarkerInfo` implementation called `RunLineMarkerInfo`. This class simply allows us to
-return an `ActionGroup` that we will now have to provide.
+We are going to change our initial implementation of `MarkdownLineMarkerProvider` quite drastically.
+First we have to add a class that is our new `LineMarkerInfo` implementation called
+`RunLineMarkerInfo`. This class simply allows us to return an `ActionGroup` that we will now have to
+provide.
 
 ```kotlin
 class RunLineMarkerInfo(element: PsiElement,
@@ -299,15 +309,16 @@ class MarkdownLineMarkerProvider : LineMarkerProvider {
 }
 ```
 
-The `createActionGroup(...)` method actually creates an `ActionGroup` and adds a bunch of actions that will be available
-when the user clicks on the gutter icon for this plugin. Note that you can also add actions that are registered in your
-`plugin.xml` using something like this.
+The `createActionGroup(...)` method actually creates an `ActionGroup` and adds a bunch of actions
+that will be available when the user clicks on the gutter icon for this plugin. Note that you can
+also add actions that are registered in your `plugin.xml` using something like this.
 
 ```kotlin
 group.add(ActionManager.getInstance().getAction("ID of your plugin action"))
 ```
 
-Finally, here's the action to open a URL that is associated with the INLINE_LINK that is highlighted in the gutter.
+Finally, here's the action to open a URL that is associated with the INLINE_LINK that is highlighted
+in the gutter.
 
 ```kotlin
 class OpenUrlAction(val linkDestination: String?) :

@@ -7,8 +7,8 @@
 
 # idea-plugin-example2
 
-This repo is a pedagogical example of an IDEA plugin. To learn more about plugins please read the tutorial that
-accompanies this code example on developerlife.com -
+This repo is a pedagogical example of an IDEA plugin. To learn more about plugins please read the
+tutorial that accompanies this code example on developerlife.com -
 [Introduction to creating IntelliJ IDEA plugins](http://localhost:4000/2020/11/20/idea-plugin-example-intro/).
 
 Also checkout the accompanying repo to this one
